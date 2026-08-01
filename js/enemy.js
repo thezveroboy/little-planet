@@ -1,8 +1,8 @@
 ﻿import * as THREE from 'three';
-import { makeGlowTexture } from './sky.js?v=46';
-import { WEAPON_TYPES, AMMO_TYPES, fireProjectile } from './weapons.js?v=46';
-import { playGunshot, playReload, playReloadEnd, playPickup } from './sound.js?v=46';
-import { generateEnemyName } from './namegen.js?v=46';
+import { makeGlowTexture } from './sky.js?v=47';
+import { WEAPON_TYPES, AMMO_TYPES, fireProjectile } from './weapons.js?v=47';
+import { playGunshot, playReload, playReloadEnd, playPickup } from './sound.js?v=47';
+import { generateEnemyName } from './namegen.js?v=47';
 
 function mulberry32(a) {
     return function() {

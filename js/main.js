@@ -1,13 +1,13 @@
 ﻿import * as THREE from 'three';
-import { Planet } from './planet.js?v=46';
-import { Player } from './player.js?v=46';
-import { SkySystem, makeGlowTexture } from './sky.js?v=46';
-import { playPickup, playInvestigate, playPlantHit, playEnemyHit, playEnemyDeath, updateListener } from './sound.js?v=46';
-import { generateCrashedShip } from './ship.js?v=46';
-import { generatePlanetName } from './namegen.js?v=46';
-import { generateVegetation, breakPlant } from './vegetation.js?v=46';
-import { generateWeapon, setProjectileRng } from './weapons.js?v=46';
-import { Enemy } from './enemy.js?v=46';
+import { Planet } from './planet.js?v=47';
+import { Player } from './player.js?v=47';
+import { SkySystem, makeGlowTexture } from './sky.js?v=47';
+import { playPickup, playInvestigate, playPlantHit, playEnemyHit, playEnemyDeath, updateListener } from './sound.js?v=47';
+import { generateCrashedShip } from './ship.js?v=47';
+import { generatePlanetName } from './namegen.js?v=47';
+import { generateVegetation, breakPlant } from './vegetation.js?v=47';
+import { generateWeapon, setProjectileRng } from './weapons.js?v=47';
+import { Enemy } from './enemy.js?v=47';
 
 window.addEventListener('error', (e) => {
     const el = document.createElement('div');
@@ -315,7 +315,7 @@ try {
             if (attacker) addLog(`${attacker.name} killed ${e.name}`, 'enemy');
             if (enemiesKilled >= enemies.length) {
                 gameWon = true;
-                if (victoryPrompt) victoryPrompt.style.display = 'block';
+                addLog('You won — press Y to evacuate', 'win');
             }
         }
     }
@@ -332,7 +332,6 @@ try {
             gameWon = false;
             const defeatOverlay = document.getElementById('defeatOverlay');
             if (defeatOverlay) defeatOverlay.style.display = 'flex';
-            if (victoryPrompt) victoryPrompt.style.display = 'none';
         }
     }
 
@@ -481,7 +480,6 @@ try {
         }
     }
 
-    const victoryPrompt = document.getElementById('victoryPrompt');
     const evacOverlay = document.getElementById('evacOverlay');
     const scoreDisplay = document.getElementById('scoreDisplay');
     const evacScoreEl = document.getElementById('evacScore');
@@ -563,7 +561,6 @@ try {
                     evacuated = true;
                     if (evacOverlay) evacOverlay.style.display = 'flex';
                     if (evacScoreEl) evacScoreEl.textContent = `score: ${score}`;
-                    if (victoryPrompt) victoryPrompt.style.display = 'none';
                 } else {
                     sessionStorage.setItem('lp_score', score);
                     sessionStorage.setItem('lp_evac', '1');
@@ -743,7 +740,7 @@ try {
                         if (scoreDisplay) scoreDisplay.textContent = `score: ${score}`;
                         if (enemiesKilled >= enemies.length) {
                             gameWon = true;
-                            if (victoryPrompt) victoryPrompt.style.display = 'block';
+                            addLog('You won — press Y to evacuate', 'win');
                         }
                     }
                     if (p.mesh.parent) p.mesh.parent.remove(p.mesh);

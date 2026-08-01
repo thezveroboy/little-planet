@@ -1,6 +1,6 @@
 ﻿import * as THREE from 'three';
-import { fireProjectile, setProjectileRng } from './weapons.js?v=46';
-import { playGunshot, playReload, playReloadEnd } from './sound.js?v=46';
+import { fireProjectile, setProjectileRng } from './weapons.js?v=47';
+import { playGunshot, playReload, playReloadEnd } from './sound.js?v=47';
 
 function blockedByObstacles(pos, plants, enemies, selfPos, ship) {
     for (const p of plants) {

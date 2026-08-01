@@ -44,11 +44,6 @@ body { margin: 0; overflow: hidden; font-family: 'Segoe UI', sans-serif; }
 #wpnType { font-size: 11px; opacity: 0.6; }
 #wpnAmmo { font-size: 13px; margin-top: 2px; }
 #blocker .planet-name { font-size: 36px; font-weight: 300; margin-bottom: 20px; letter-spacing: 3px; }
-#victoryPrompt {
-    position: fixed; top: 20px; right: 20px; color: #ffdd44;
-    font: bold 13px monospace; text-shadow: 0 0 15px rgba(0,0,0,0.9);
-    pointer-events: none; z-index: 10; display: none; text-align: right;
-}
 #evacOverlay {
     position: fixed; inset: 0; background: rgba(0,0,0,0.85);
     display: none; align-items: center; justify-content: center;
@@ -77,6 +72,7 @@ body { margin: 0; overflow: hidden; font-family: 'Segoe UI', sans-serif; }
 #logPanel .log.sys { color: rgba(190,210,255,0.75); }
 #logPanel .log.enemy { color: rgba(255,190,120,0.92); }
 #logPanel .log.player { color: rgba(150,255,190,0.95); }
+#logPanel .log.win { color: #ffdd44; font-weight: bold; text-shadow: 0 0 12px rgba(255,220,60,0.5); }
 </style>
 </head>
 <body>
@@ -99,7 +95,6 @@ body { margin: 0; overflow: hidden; font-family: 'Segoe UI', sans-serif; }
     </div>
 </div>
 <div id="pickupPrompt">Press E to pick up</div>
-<div id="victoryPrompt">VICTORY — Press Y to evacuate</div>
 <div id="controls">WASD — move · Space — jump · Mouse — look · LMB — fire · R — reload · E — pickup</div>
 <div id="blocker">
     <div class="planet-name" id="titlePlanetName">—</div>
@@ -127,6 +122,6 @@ body { margin: 0; overflow: hidden; font-family: 'Segoe UI', sans-serif; }
     }
 }
 </script>
-<script type="module" src="js/main.js?v=46"></script>
+<script type="module" src="js/main.js?v=47"></script>
 </body>
 </html>
