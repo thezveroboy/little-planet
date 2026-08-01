@@ -35,7 +35,6 @@ body { margin: 0; overflow: hidden; font-family: 'Segoe UI', sans-serif; }
 #blocker h2 { font-size: 28px; margin-bottom: 10px; letter-spacing: 1px; }
 #blocker p { font-size: 14px; opacity: 0.7; margin: 0; }
 .sky-summary { font-size: 13px; opacity: 0.55; margin: 4px 0 2px; letter-spacing: 1px; }
-.biome { font-size: 12px; opacity: 0.4; margin: 0 0 4px; font-style: italic; }
 #pickupPrompt { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); color: #fff; font: 16px sans-serif; background: rgba(0,0,0,0.6); padding: 8px 20px; border-radius: 4px; display: none; pointer-events: none; }
 #weaponHUD { position: fixed; bottom: 20px; left: 20px; display: flex; align-items: center; gap: 10px; padding: 6px 12px 6px 6px; border-radius: 6px; pointer-events: none; }
 #weaponIconWrap { width: 44px; height: 44px; border-radius: 4px; flex-shrink: 0; background: rgba(0,0,0,0.3); }
@@ -84,9 +83,9 @@ body { margin: 0; overflow: hidden; font-family: 'Segoe UI', sans-serif; }
 <div id="info">
     <h1 id="planetName">—</h1>
     <div class="sky-summary" id="skySummary"></div>
-    <div class="biome" id="biomeDisplay"></div>
     <div class="seed" id="seedDisplay">seed: —</div>
     <div class="score" id="scoreDisplay">score: 0</div>
+    <div class="enemies" id="enemyCount" style="font-size:13px;color:#88aaff;margin-top:2px">enemies: —</div>
     <div class="hp" id="playerHP" style="font-size:13px;color:#ff7777;margin-top:2px">HP: —</div>
 </div>
 <div id="crosshair"></div>
@@ -104,21 +103,21 @@ body { margin: 0; overflow: hidden; font-family: 'Segoe UI', sans-serif; }
 <div id="controls">WASD — move · Space — jump · Mouse — look · LMB — fire · R — reload · E — pickup</div>
 <div id="blocker">
     <div class="planet-name" id="titlePlanetName">—</div>
-    <h2>Нажми, чтобы начать</h2>
-    <p>Кликни для входа в игру &bull; Esc — пауза</p>
+    <h2>Click to start</h2>
+    <p>Click to enter &bull; Esc — pause</p>
 </div>
 
 <div id="evacOverlay">
     <h1>EVACUATED</h1>
-    <p>Ты покинул планету</p>
+    <p>You left the planet</p>
     <p id="evacScore" style="font-size:16px;opacity:0.85">score: 0</p>
-    <p style="font-size:14px;opacity:0.5;margin-top:20px">Y — новая планета</p>
+    <p style="font-size:14px;opacity:0.5;margin-top:20px">Y — new planet</p>
 </div>
 
 <div id="defeatOverlay">
     <h1>DEFEAT</h1>
-    <p>Ты погиб на планете</p>
-    <p style="font-size:14px;opacity:0.5;margin-top:20px">Y — новая игра (очки обнулены)</p>
+    <p>You died on the planet</p>
+    <p style="font-size:14px;opacity:0.5;margin-top:20px">Y — new game (score resets)</p>
 </div>
 
 <script type="importmap">
@@ -128,6 +127,6 @@ body { margin: 0; overflow: hidden; font-family: 'Segoe UI', sans-serif; }
     }
 }
 </script>
-<script type="module" src="js/main.js?v=45"></script>
+<script type="module" src="js/main.js?v=46"></script>
 </body>
 </html>

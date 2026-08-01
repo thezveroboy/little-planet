@@ -1,5 +1,5 @@
 ﻿import * as THREE from 'three';
-import { Noise } from './noise.js?v=45';
+import { Noise } from './noise.js?v=46';
 
 function mulberry32(a) {
     return function() {

@@ -31,11 +31,17 @@ const ENEMY_CODENAMES = [
     'Wraith', 'Yukon', 'Zenith', 'Zephyr', 'Bastion', 'Cipher', 'Drake', 'Ember',
 ];
 
+const ENEMY_PREFIXES = [
+    'Crimson', 'Iron', 'Silver', 'Dark', 'Wild', 'Steel', 'Frost', 'Blaze',
+    'Thunder', 'Shadow', 'Blood', 'Ghost', 'Ironclad', 'Night', 'Solar', 'Storm',
+    'Venom', 'Wolf', 'Cobalt', 'Doom', 'Echo', 'Flame', 'Glacier', 'Havoc',
+];
+
 export function generateEnemyName(seed) {
     const rng = mulberry32(seed + 6666);
-    const a = ENEMY_CODENAMES[rng() * ENEMY_CODENAMES.length | 0];
-    const num = 1 + (rng() * 99 | 0);
-    return `${a}-${num}`;
+    const a = ENEMY_PREFIXES[rng() * ENEMY_PREFIXES.length | 0];
+    const b = ENEMY_CODENAMES[rng() * ENEMY_CODENAMES.length | 0];
+    return `${a} ${b}`;
 }
 
 export function formatName(name) {

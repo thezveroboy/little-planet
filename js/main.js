@@ -1,13 +1,13 @@
 ﻿import * as THREE from 'three';
-import { Planet } from './planet.js?v=45';
-import { Player } from './player.js?v=45';
-import { SkySystem, makeGlowTexture } from './sky.js?v=45';
-import { playPickup, playInvestigate, playPlantHit, playEnemyHit, playEnemyDeath, updateListener } from './sound.js?v=45';
-import { generateCrashedShip } from './ship.js?v=45';
-import { generatePlanetName } from './namegen.js?v=45';
-import { generateVegetation, breakPlant } from './vegetation.js?v=45';
-import { generateWeapon, setProjectileRng } from './weapons.js?v=45';
-import { Enemy } from './enemy.js?v=45';
+import { Planet } from './planet.js?v=46';
+import { Player } from './player.js?v=46';
+import { SkySystem, makeGlowTexture } from './sky.js?v=46';
+import { playPickup, playInvestigate, playPlantHit, playEnemyHit, playEnemyDeath, updateListener } from './sound.js?v=46';
+import { generateCrashedShip } from './ship.js?v=46';
+import { generatePlanetName } from './namegen.js?v=46';
+import { generateVegetation, breakPlant } from './vegetation.js?v=46';
+import { generateWeapon, setProjectileRng } from './weapons.js?v=46';
+import { Enemy } from './enemy.js?v=46';
 
 window.addEventListener('error', (e) => {
     const el = document.createElement('div');
@@ -312,7 +312,7 @@ try {
             const w = e.dropHeldWeapon();
             if (w) dropEnemyWeapon(w, e.position);
             enemiesKilled++;
-            if (attacker) addLog(`${attacker.name} убил ${e.name}`, 'enemy');
+            if (attacker) addLog(`${attacker.name} killed ${e.name}`, 'enemy');
             if (enemiesKilled >= enemies.length) {
                 gameWon = true;
                 if (victoryPrompt) victoryPrompt.style.display = 'block';
@@ -323,11 +323,11 @@ try {
     function onEnemyProjPlayerHit(p) {
         const attacker = p.owner;
         const dmg = attacker && attacker.weapon ? attacker.weapon.stats.damage : 10;
-        logDamage(attacker ? attacker.name : '?', 'Вы', dmg);
+        logDamage(attacker ? attacker.name : '?', 'You', dmg);
         playEnemyHit();
         const died = player.takeDamage(dmg);
         if (died) {
-            addLog('Вы погибли. Поражение.', 'player');
+            addLog('You died. Defeat.', 'player');
             gameOver = true;
             gameWon = false;
             const defeatOverlay = document.getElementById('defeatOverlay');
@@ -345,7 +345,7 @@ try {
         crashedShip.shipBeamMat.needsUpdate = true;
         const byPlayer = by === player;
         playInvestigate(byPlayer ? undefined : by.position);
-        addLog(`${byPlayer ? 'Вы' : by.name} исследовал${byPlayer ? 'и' : ''} корабль «${crashedShip.name}»`, byPlayer ? 'player' : 'enemy');
+        addLog(`${byPlayer ? 'You' : by.name} investigated the ship "${crashedShip.name}"`, byPlayer ? 'player' : 'enemy');
         if (byPlayer) {
             score++;
             if (scoreDisplay) scoreDisplay.textContent = `score: ${score}`;
@@ -371,7 +371,7 @@ try {
         const now = performance.now();
         if (now - (lastDamageLog.get(key) || 0) < 600) return;
         lastDamageLog.set(key, now);
-        addLog(`${who} → ${whom}: ${dmg} урона`, who === 'Вы' ? 'player' : 'enemy');
+        addLog(`${who} → ${whom}: ${dmg} damage`, who === 'You' ? 'player' : 'enemy');
     }
 
     const enemies = (function() {
@@ -399,8 +399,8 @@ try {
     for (const e of enemies) e.player = player;
     setProjectileRng(() => Math.random());
 
-    addLog(`Игра запущена: ${1 + enemies.length} участников (Вы + ${enemies.length} врагов: ${enemies.map(x => x.name).join(', ')})`, 'sys');
-    if (crashedShip) addLog(`Найден разбитый корабль «${crashedShip.name}» — дополнительная цель`, 'sys');
+    addLog(`Game started: ${1 + enemies.length} participants (You + ${enemies.length} enemies: ${enemies.map(x => x.name).join(', ')})`, 'sys');
+    if (crashedShip) addLog(`Found a crashed ship "${crashedShip.name}" — bonus objective`, 'sys');
 
     function buildPickup(data, dir, h) {
         const pPos = dir.clone().multiplyScalar(h + 2);
@@ -464,13 +464,21 @@ try {
                 }
             }
         }
-        if (hud && player.weapon) {
-            const info = player.getWeaponInfo();
-            document.getElementById('wpnName').textContent = info.name;
-            document.getElementById('wpnType').textContent = `${info.type}, ${info.ammoType}`;
-            document.getElementById('wpnAmmo').textContent = `${info.ammo}/${info.magSize}`;
+        if (hud) {
+            if (player.weapon) {
+                const info = player.getWeaponInfo();
+                document.getElementById('wpnName').textContent = info.name;
+                document.getElementById('wpnType').textContent = `${info.type}, ${info.ammoType}`;
+                document.getElementById('wpnAmmo').textContent = `${info.ammo}/${info.magSize}`;
+                document.getElementById('wpnAmmo').style.display = 'block';
+            } else {
+                document.getElementById('wpnName').textContent = 'Not armed';
+                document.getElementById('wpnType').textContent = '';
+                document.getElementById('wpnAmmo').textContent = '';
+                document.getElementById('wpnAmmo').style.display = 'none';
+            }
             hud.style.display = 'flex';
-        } else if (hud) hud.style.display = 'none';
+        }
     }
 
     const victoryPrompt = document.getElementById('victoryPrompt');
@@ -480,14 +488,16 @@ try {
 
     const planetNameEl = document.getElementById('planetName');
     const skySummaryEl = document.getElementById('skySummary');
-    const biomeDisplayEl = document.getElementById('biomeDisplay');
     const seedDisplay = document.getElementById('seedDisplay');
     const titleNameEl = document.getElementById('titlePlanetName');
     const blocker = document.getElementById('blocker');
 
     if (planetNameEl) planetNameEl.textContent = PLANET_NAME;
-    if (skySummaryEl && sky.summary) skySummaryEl.textContent = sky.summary;
-    if (biomeDisplayEl) biomeDisplayEl.textContent = veg.biome;
+    if (skySummaryEl) {
+        const starPart = sky.summary;
+        const planetPart = sky._planetSummary ? ` · Planet: ${sky._planetSummary}` : '';
+        skySummaryEl.textContent = `${starPart}${planetPart} · Biome: ${veg.biome}`;
+    }
     if (seedDisplay) seedDisplay.textContent = `seed: ${SEED}`;
     if (titleNameEl) titleNameEl.textContent = PLANET_NAME;
     if (scoreDisplay) scoreDisplay.textContent = `score: ${score}`;
@@ -528,14 +538,14 @@ try {
                     if (player.weapon) {
                         const oldData = player.weapon;
                         player.equipWeapon(p.data);
-                        addLog(`Вы сменили оружие на ${p.data.name} (${p.data.type.name})`, 'player');
+                        addLog(`You swapped to ${p.data.name} (${p.data.type.name})`, 'player');
                         const dropDir = p.pos.clone().normalize();
                         const dropH = p.pos.length() - 2;
                         weaponPickups.push(buildPickup(oldData, dropDir, dropH));
                         playPickup(true);
                     } else {
                         player.equipWeapon(p.data);
-                        addLog(`Вы подобрали ${p.data.name} (${p.data.type.name})`, 'player');
+                        addLog(`You picked up ${p.data.name} (${p.data.type.name})`, 'player');
                         playPickup(false);
                     }
                     removePickup(p);
@@ -604,8 +614,15 @@ try {
             p.glow.scale.set(p.baseScale * (0.9 + 0.15 * v), p.baseScale * (0.9 + 0.15 * v), 1);
             if (p.light) p.light.intensity = p.baseIntensity * (0.4 + 0.6 * v);
         }
+        for (const cl of sky.clouds) cl.mesh.rotation.y += dt * cl.speed;
         const hpEl = document.getElementById('playerHP');
         if (hpEl) hpEl.textContent = `HP: ${Math.max(0, player.hp)}/${player.maxHp}`;
+        const ecEl = document.getElementById('enemyCount');
+        if (ecEl) {
+            let alive = 0;
+            for (const e of enemies) if (e.alive) alive++;
+            ecEl.textContent = `enemies: ${alive}/${enemies.length}`;
+        }
         if (gameOver) {
             renderer.render(scene, camera);
             return;
@@ -713,12 +730,12 @@ try {
                 }
                 if (dist < 2.5) {
                     const dmg = player.weapon.stats.damage;
-                    logDamage('Вы', e.name, dmg);
+                    logDamage('You', e.name, dmg);
                     playEnemyHit(e.position);
                     const died = e.takeDamage(dmg);
                     if (died) {
                         playEnemyDeath(e.position);
-                        addLog(`Вы убили ${e.name}`, 'player');
+                        addLog(`You killed ${e.name}`, 'player');
                         const w = e.dropHeldWeapon();
                         if (w) dropEnemyWeapon(w, e.position);
                         enemiesKilled++;

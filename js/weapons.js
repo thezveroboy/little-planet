@@ -1,5 +1,5 @@
 ﻿import * as THREE from 'three';
-import { makeGlowTexture } from './sky.js?v=45';
+import { makeGlowTexture } from './sky.js?v=46';
 
 function mulberry32(a) {
     return function() {

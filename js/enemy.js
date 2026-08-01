@@ -1,8 +1,8 @@
 ﻿import * as THREE from 'three';
-import { makeGlowTexture } from './sky.js?v=45';
-import { WEAPON_TYPES, AMMO_TYPES, fireProjectile } from './weapons.js?v=45';
-import { playGunshot, playReload, playReloadEnd, playPickup } from './sound.js?v=45';
-import { generateEnemyName } from './namegen.js?v=45';
+import { makeGlowTexture } from './sky.js?v=46';
+import { WEAPON_TYPES, AMMO_TYPES, fireProjectile } from './weapons.js?v=46';
+import { playGunshot, playReload, playReloadEnd, playPickup } from './sound.js?v=46';
+import { generateEnemyName } from './namegen.js?v=46';
 
 function mulberry32(a) {
     return function() {
@@ -498,7 +498,7 @@ export class Enemy {
         playPickup(had, this.position);
         if (this.logFn) {
             const w = p.data;
-            this.logFn(`${this.name} ${had ? 'сменил оружие на' : 'подобрал'} ${w.name} (${w.type.name})`, 'enemy');
+            this.logFn(`${this.name} ${had ? 'swapped to' : 'picked up'} ${w.name} (${w.type.name})`, 'enemy');
         }
         if (this.removePickupFn) this.removePickupFn(p);
     }
