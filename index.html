@@ -1,0 +1,133 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Little Planet</title>
+<style>
+body { margin: 0; overflow: hidden; font-family: 'Segoe UI', sans-serif; }
+#info {
+    position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
+    color: white; text-align: center; pointer-events: none; text-shadow: 0 0 10px rgba(0,0,0,0.8);
+    z-index: 10;
+}
+#info h1 { margin: 0; font-size: 24px; letter-spacing: 2px; }
+#info .seed { font-size: 14px; opacity: 0.7; }
+#info .score { font-size: 14px; color: #ffdd44; margin-top: 4px; letter-spacing: 1px; text-shadow: 0 0 10px rgba(255,200,50,0.3); }
+#controls {
+    position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
+    color: rgba(255,255,255,0.5); font-size: 13px; text-align: center;
+    pointer-events: none; text-shadow: 0 0 8px rgba(0,0,0,0.8);
+    z-index: 10; letter-spacing: 0.5px;
+}
+#crosshair {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 4px; height: 4px; border-radius: 50%; background: rgba(255,255,255,0.6);
+    pointer-events: none; z-index: 10;
+    box-shadow: 0 0 6px rgba(255,255,255,0.3);
+}
+#blocker {
+    position: absolute; inset: 0; background: rgba(0,0,0,0.6);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 20; cursor: pointer; flex-direction: column;
+    color: white; text-align: center;
+}
+#blocker h2 { font-size: 28px; margin-bottom: 10px; letter-spacing: 1px; }
+#blocker p { font-size: 14px; opacity: 0.7; margin: 0; }
+.sky-summary { font-size: 13px; opacity: 0.55; margin: 4px 0 2px; letter-spacing: 1px; }
+.biome { font-size: 12px; opacity: 0.4; margin: 0 0 4px; font-style: italic; }
+#pickupPrompt { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); color: #fff; font: 16px sans-serif; background: rgba(0,0,0,0.6); padding: 8px 20px; border-radius: 4px; display: none; pointer-events: none; }
+#weaponHUD { position: fixed; bottom: 20px; left: 20px; display: flex; align-items: center; gap: 10px; padding: 6px 12px 6px 6px; border-radius: 6px; pointer-events: none; }
+#weaponIconWrap { width: 44px; height: 44px; border-radius: 4px; flex-shrink: 0; background: rgba(0,0,0,0.3); }
+#weaponInfo { color: #fff; font: bold 14px monospace; background: rgba(0,0,0,0.55); padding: 4px 8px; border-radius: 4px; }
+#weaponInfo span { display: block; }
+#wpnName { font-size: 16px; }
+#wpnType { font-size: 11px; opacity: 0.6; }
+#wpnAmmo { font-size: 13px; margin-top: 2px; }
+#blocker .planet-name { font-size: 36px; font-weight: 300; margin-bottom: 20px; letter-spacing: 3px; }
+#victoryPrompt {
+    position: fixed; top: 20px; right: 20px; color: #ffdd44;
+    font: bold 13px monospace; text-shadow: 0 0 15px rgba(0,0,0,0.9);
+    pointer-events: none; z-index: 10; display: none; text-align: right;
+}
+#evacOverlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+    display: none; align-items: center; justify-content: center;
+    z-index: 30; flex-direction: column; color: #ffdd44; text-align: center;
+}
+#evacOverlay h1 { font-size: 48px; letter-spacing: 4px; margin-bottom: 10px; }
+#evacOverlay p { font-size: 18px; opacity: 0.7; margin: 5px 0; }
+#defeatOverlay {
+    position: fixed; inset: 0; background: rgba(40,0,0,0.85);
+    display: none; align-items: center; justify-content: center;
+    z-index: 30; flex-direction: column; color: #ff5555; text-align: center;
+}
+#defeatOverlay h1 { font-size: 48px; letter-spacing: 4px; margin-bottom: 10px; }
+#defeatOverlay p { font-size: 18px; opacity: 0.7; margin: 5px 0; }
+#logPanel {
+    position: fixed; top: 70px; left: 12px; width: 320px; max-height: 46vh;
+    display: flex; flex-direction: column; align-items: flex-start;
+    pointer-events: none; z-index: 10; overflow-y: auto; scrollbar-width: none;
+}
+#logPanel .log {
+    color: rgba(255,255,255,0.85); font: 12px/1.45 monospace; text-align: left;
+    background: rgba(0,0,0,0.45); padding: 3px 9px; margin-top: 4px; border-radius: 4px;
+    text-shadow: 0 0 6px rgba(0,0,0,0.9); max-width: 320px; word-break: break-word;
+    flex-shrink: 0;
+}
+#logPanel .log.sys { color: rgba(190,210,255,0.75); }
+#logPanel .log.enemy { color: rgba(255,190,120,0.92); }
+#logPanel .log.player { color: rgba(150,255,190,0.95); }
+</style>
+</head>
+<body>
+<div id="info">
+    <h1 id="planetName">—</h1>
+    <div class="sky-summary" id="skySummary"></div>
+    <div class="biome" id="biomeDisplay"></div>
+    <div class="seed" id="seedDisplay">seed: —</div>
+    <div class="score" id="scoreDisplay">score: 0</div>
+    <div class="hp" id="playerHP" style="font-size:13px;color:#ff7777;margin-top:2px">HP: —</div>
+</div>
+<div id="crosshair"></div>
+<div id="logPanel"></div>
+<div id="weaponHUD">
+    <div id="weaponIconWrap"></div>
+    <div id="weaponInfo">
+        <span id="wpnName">—</span>
+        <span id="wpnType"></span>
+        <span id="wpnAmmo"></span>
+    </div>
+</div>
+<div id="pickupPrompt">Press E to pick up</div>
+<div id="victoryPrompt">VICTORY — Press Y to evacuate</div>
+<div id="controls">WASD — move · Space — jump · Mouse — look · LMB — fire · R — reload · E — pickup</div>
+<div id="blocker">
+    <div class="planet-name" id="titlePlanetName">—</div>
+    <h2>Нажми, чтобы начать</h2>
+    <p>Кликни для входа в игру &bull; Esc — пауза</p>
+</div>
+
+<div id="evacOverlay">
+    <h1>EVACUATED</h1>
+    <p>Ты покинул планету</p>
+    <p id="evacScore" style="font-size:16px;opacity:0.85">score: 0</p>
+    <p style="font-size:14px;opacity:0.5;margin-top:20px">Y — новая планета</p>
+</div>
+
+<div id="defeatOverlay">
+    <h1>DEFEAT</h1>
+    <p>Ты погиб на планете</p>
+    <p style="font-size:14px;opacity:0.5;margin-top:20px">Y — новая игра (очки обнулены)</p>
+</div>
+
+<script type="importmap">
+{
+    "imports": {
+        "three": "./node_modules/three/build/three.module.js"
+    }
+}
+</script>
+<script type="module" src="js/main.js?v=45"></script>
+</body>
+</html>
